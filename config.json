@@ -1,0 +1,6 @@
+{
+  "name": "EightBall",
+  "short_description": "Send recipts picked by RNG",
+  "icon": "auto_awesome",
+  "contributors": ["Ben Arc"]
+}
