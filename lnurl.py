@@ -9,7 +9,6 @@ from lnurl import (  # type: ignore
 from starlette.requests import Request
 
 from lnbits.core.services import create_invoice
-from lnbits.extensions.eightball.models import game
 from lnbits.utils.exchange_rates import fiat_amount_as_satoshis
 
 from . import eightball_ext
@@ -17,7 +16,7 @@ from .crud import get_game
 
 
 @eightball_ext.get("/lnurl/{game_id}", name="eightball.lnurl_response")
-async def lnurl_response(req: Request, game_id: int = Query(...)):
+async def lnurl_response(req: Request, game_id):
     game = await get_game(game_id)  # type: game
     if not game:
         return {"status": "ERROR", "reason": "game not found."}

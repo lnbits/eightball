@@ -12,7 +12,6 @@ from lnbits.core.crud import get_standalone_payment
 from lnbits.core.views.api import api_payment
 
 from . import eightball_ext, eightball_renderer
-from .models import game
 from .crud import get_game
 from fastapi import Request, HTTPException
 

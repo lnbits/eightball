@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from typing import Optional
-
+from loguru import logger
 from fastapi.params import Depends
 from lnurl.exceptions import InvalidUrl as LnurlInvalidUrl
 from pydantic.main import BaseModel
@@ -31,15 +31,10 @@ async def api_list_currencies_available():
 async def api_game_from_wallet(
     r: Request, wallet: WalletTypeInfo = Depends(get_key_type)
 ):
-    games = await get_games(wallet.wallet.user)
-
-    try:
-        return [game.dict() for game in games]
-    except LnurlInvalidUrl:
-        raise HTTPException(
-            status_code=HTTPStatus.UPGRADE_REQUIRED,
-            detail="LNURLs need to be delivered over a publically accessible `https` domain or Tor.",
-        )
+    return [
+        {**game.dict(), "lnurl": game.lnurl(r)}
+        for game in await get_games(wallet.wallet.user)
+    ]
 
 
 class CreategamesData(BaseModel):

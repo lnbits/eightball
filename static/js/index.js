@@ -74,6 +74,23 @@ new Vue({
     openNewDialog() {
       this.gameDialog.show = true
     },
+    toggleGame(linkId) {
+      this.qrCodeDialog.show = true
+      this.openQrCodeDialog(linkId)
+    },
+    openQrCodeDialog(linkId) {
+      var link = _.findWhere(this.gameLinks, {id: linkId})
+      this.qrCodeDialog.data = {
+        id: link.id,
+        price: link.price,
+        comments: link.name,
+        wordlist: link.wordlist,
+        lnurl: link.lnurl,
+        pay_url: link.pay_url,
+        print_url: link.print_url
+      }
+      this.qrCodeDialog.show = true
+    },
     loadgames() {
       LNbits.api
         .request(
