@@ -1,24 +1,10 @@
-# Maybe your extension needs some LNURL stuff.
-# Here is a very simple example of how to do it.
-# Feel free to delete this file if you don't need it.
-
 from http import HTTPStatus
-from fastapi import Depends, Query, Request
+from fastapi import Query, Request
 from . import eightball_ext
 from .crud import get_eightball
-from lnbits.core.services import create_invoice, pay_invoice
+from lnbits.core.services import create_invoice
 from loguru import logger
-from typing import Optional
-from .crud import update_eightball
-from .models import EightBall
-import shortuuid
 import random
-
-#################################################
-########### A very simple LNURLpay ##############
-# https://github.com/lnurl/luds/blob/luds/06.md #
-#################################################
-#################################################
 
 
 @eightball_ext.get(
@@ -61,7 +47,7 @@ async def api_lnurl_pay_cb(
     if not eightball:
         return {"status": "ERROR", "reason": "No eightball found"}
 
-    payment_hash, payment_request = await create_invoice(
+    payment_request = await create_invoice(
         wallet_id=eightball.wallet,
         amount=int(amount / 1000),
         memo=eightball.name,

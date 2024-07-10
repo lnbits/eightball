@@ -1,20 +1,11 @@
 import asyncio
 
-from loguru import logger
-
 from lnbits.core.models import Payment
-from lnbits.core.services import create_invoice, websocket_updater
+from lnbits.core.services import websocket_updater
 from lnbits.helpers import get_current_extension_name
 from lnbits.tasks import register_invoice_listener
 
-from .crud import get_eightball, update_eightball
-
-
-#######################################
-########## RUN YOUR TASKS HERE ########
-#######################################
-
-# The usual task is to listen to invoices related to this extension
+from .crud import get_eightball
 
 
 async def wait_for_paid_invoices():
@@ -25,16 +16,12 @@ async def wait_for_paid_invoices():
         await on_invoice_paid(payment)
 
 
-# Do somethhing when an invoice related top this extension is paid
-
-
 async def on_invoice_paid(payment: Payment) -> None:
     if payment.extra.get("tag") != "EightBall":
         return
 
     eightball_id = payment.extra.get("eightballId")
     eightball = await get_eightball(eightball_id)
-
 
     some_payment_data = {
         "name": eightball.name,

@@ -1,22 +1,11 @@
 from http import HTTPStatus
-import json
-
-import httpx
 from fastapi import Depends, Query, Request
-from lnurl import decode as decode_lnurl
-from loguru import logger
 from starlette.exceptions import HTTPException
-
 from lnbits.core.crud import get_user
-from lnbits.core.models import Payment
-from lnbits.core.services import create_invoice
-from lnbits.core.views.api import api_payment
 from lnbits.decorators import (
     WalletTypeInfo,
-    check_admin,
     get_key_type,
     require_admin_key,
-    require_invoice_key,
 )
 
 from . import eightball_ext
@@ -30,13 +19,6 @@ from .crud import (
 from .models import CreateEightBallData
 
 
-#######################################
-##### ADD YOUR API ENDPOINTS HERE #####
-#######################################
-
-## Get all the records belonging to the user
-
-
 @eightball_ext.get("/api/v1/eightb", status_code=HTTPStatus.OK)
 async def api_eightballs(
     req: Request,
@@ -47,12 +29,7 @@ async def api_eightballs(
     if all_wallets:
         user = await get_user(wallet.wallet.user)
         wallet_ids = user.wallet_ids if user else []
-    return [
-        eightball.dict() for eightball in await get_eightballs(wallet_ids, req)
-    ]
-
-
-## Get a single record
+    return [eightball.dict() for eightball in await get_eightballs(wallet_ids, req)]
 
 
 @eightball_ext.get("/api/v1/eightb/{eightball_id}", status_code=HTTPStatus.OK)
@@ -65,9 +42,6 @@ async def api_eightball(
             status_code=HTTPStatus.NOT_FOUND, detail="EightBall does not exist."
         )
     return eightball.dict()
-
-
-## update a record
 
 
 @eightball_ext.put("/api/v1/eightb/{eightball_id}")
@@ -94,22 +68,14 @@ async def api_eightball_update(
     return eightball.dict()
 
 
-## Create a new record
-
-
 @eightball_ext.post("/api/v1/eightb", status_code=HTTPStatus.CREATED)
 async def api_eightball_create(
     req: Request,
     data: CreateEightBallData,
     wallet: WalletTypeInfo = Depends(require_admin_key),
 ):
-    eightball = await create_eightball(
-        wallet_id=wallet.wallet.id, data=data, req=req
-    )
+    eightball = await create_eightball(wallet_id=wallet.wallet.id, data=data, req=req)
     return eightball.dict()
-
-
-## Delete a record
 
 
 @eightball_ext.delete("/api/v1/eightb/{eightball_id}")

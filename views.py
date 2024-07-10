@@ -1,5 +1,4 @@
 from http import HTTPStatus
-
 from fastapi import Depends, Request
 from fastapi.templating import Jinja2Templates
 from starlette.exceptions import HTTPException
@@ -15,22 +14,11 @@ from .crud import get_eightball
 eightb = Jinja2Templates(directory="eightb")
 
 
-#######################################
-##### ADD YOUR PAGE ENDPOINTS HERE ####
-#######################################
-
-
-# Backend admin page
-
-
 @eightball_ext.get("/", response_class=HTMLResponse)
 async def index(request: Request, user: User = Depends(check_user_exists)):
     return eightball_renderer().TemplateResponse(
         "eightball/index.html", {"request": request, "user": user.dict()}
     )
-
-
-# Frontend shareable page
 
 
 @eightball_ext.get("/{eightball_id}")
@@ -50,9 +38,6 @@ async def eightball(request: Request, eightball_id):
             "web_manifest": f"/eightball/manifest/{eightball_id}.webmanifest",
         },
     )
-
-
-# Manifest for public page, customise or remove manifest completely
 
 
 @eightball_ext.get("/manifest/{eightball_id}.webmanifest")

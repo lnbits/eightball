@@ -4,10 +4,8 @@ from lnbits.helpers import urlsafe_short_hash
 from lnbits.lnurl import encode as lnurl_encode
 from . import db
 from .models import CreateEightBallData, EightBall
-from loguru import logger
 from fastapi import Request
 from lnurl import encode as lnurl_encode
-import shortuuid
 
 
 async def create_eightball(
@@ -30,6 +28,7 @@ async def create_eightball(
     eightball = await get_eightball(eightball_id, req)
     assert eightball, "Newly created table couldn't be retrieved"
     return eightball
+
 
 async def get_eightball(
     eightball_id: str, req: Optional[Request] = None
@@ -80,6 +79,4 @@ async def update_eightball(
 
 
 async def delete_eightball(eightball_id: str) -> None:
-    await db.execute(
-        "DELETE FROM eightball.maintable WHERE id = ?", (eightball_id,)
-    )
+    await db.execute("DELETE FROM eightball.maintable WHERE id = ?", (eightball_id,))

@@ -9,9 +9,7 @@ from loguru import logger
 
 db = Database("ext_eightball")
 
-eightball_ext: APIRouter = APIRouter(
-    prefix="/eightball", tags=["EightBall"]
-)
+eightball_ext: APIRouter = APIRouter(prefix="/eightball", tags=["EightBall"])
 
 eightball_static_files = [
     {
@@ -32,12 +30,14 @@ from .views_api import *
 
 scheduled_tasks: list[asyncio.Task] = []
 
+
 def eightball_stop():
     for task in scheduled_tasks:
         try:
             task.cancel()
         except Exception as ex:
             logger.warning(ex)
+
 
 def eightball_start():
     task = create_permanent_unique_task("ext_eightball", wait_for_paid_invoices)
