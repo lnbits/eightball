@@ -37,7 +37,10 @@ async def get_eightballs(wallet_ids: Union[str, list[str]]) -> list[EightBall]:
 async def update_eightball(eightball: EightBall) -> EightBall:
     await db.execute(
         update_query("eightball.maintable", eightball),
-        (*eightball.dict().values(), eightball.id,),
+        (
+            *eightball.dict().values(),
+            eightball.id,
+        ),
     )
     return eightball
 
