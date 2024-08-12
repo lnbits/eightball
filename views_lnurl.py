@@ -1,13 +1,15 @@
-from http import HTTPStatus
-from fastapi import Query, Request
-from . import eightball_ext
-from .crud import get_eightball
-from lnbits.core.services import create_invoice
-from loguru import logger
 import random
+from http import HTTPStatus
+
+from fastapi import APIRouter, Query, Request
+from lnbits.core.services import create_invoice
+
+from .crud import get_eightball
+
+eightball_lnurl_router = APIRouter()
 
 
-@eightball_ext.get(
+@eightball_lnurl_router.get(
     "/api/v1/lnurl/pay/{eightball_id}",
     status_code=HTTPStatus.OK,
     name="eightball.api_lnurl_pay",
@@ -19,6 +21,8 @@ async def api_lnurl_pay(
     eightball = await get_eightball(eightball_id)
     if not eightball:
         return {"status": "ERROR", "reason": "No eightball found"}
+    if not eightball.lnurlpayamount:
+        return {"status": "ERROR", "reason": "Eightball has no lnurlpayamount set"}
     return {
         "callback": str(
             request.url_for(
@@ -27,12 +31,12 @@ async def api_lnurl_pay(
         ),
         "maxSendable": eightball.lnurlpayamount * 1000,
         "minSendable": eightball.lnurlpayamount * 1000,
-        "metadata": '[["text/plain", "' + eightball.name + '"]]',
+        "metadata": f"""[["text/plain", "{eightball.name}"]]""",
         "tag": "payRequest",
     }
 
 
-@eightball_ext.get(
+@eightball_lnurl_router.get(
     "/api/v1/lnurl/paycb/{eightball_id}",
     status_code=HTTPStatus.OK,
     name="eightball.api_lnurl_pay_callback",
@@ -43,11 +47,10 @@ async def api_lnurl_pay_cb(
     amount: int = Query(...),
 ):
     eightball = await get_eightball(eightball_id)
-    logger.debug(eightball)
     if not eightball:
         return {"status": "ERROR", "reason": "No eightball found"}
 
-    payment_request = await create_invoice(
+    _, payment_request = await create_invoice(
         wallet_id=eightball.wallet,
         amount=int(amount / 1000),
         memo=eightball.name,
@@ -58,9 +61,9 @@ async def api_lnurl_pay_cb(
             "extra": request.query_params.get("amount"),
         },
     )
-    randomWord = random.choice(eightball.wordlist.split("\n"))
+    random_word = random.choice(eightball.wordlist.split("\n"))
     return {
         "pr": payment_request,
         "routes": [],
-        "successAction": {"tag": "message", "message": randomWord},
+        "successAction": {"tag": "message", "message": random_word},
     }

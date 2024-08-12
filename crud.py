@@ -1,54 +1,29 @@
-from typing import List, Optional, Union
+from typing import Optional, Union
 
-from lnbits.helpers import urlsafe_short_hash
-from lnbits.lnurl import encode as lnurl_encode
-from . import db
-from .models import CreateEightBallData, EightBall
-from fastapi import Request
-from lnurl import encode as lnurl_encode
+from lnbits.db import Database
+from lnbits.helpers import insert_query, update_query
+
+from .models import EightBall
+
+db = Database("ext_eightball")
 
 
-async def create_eightball(
-    wallet_id: str, data: CreateEightBallData, req: Request
-) -> EightBall:
-    eightball_id = urlsafe_short_hash()
+async def create_eightball(data: EightBall) -> EightBall:
     await db.execute(
-        """
-        INSERT INTO eightball.maintable (id, wallet, name, lnurlpayamount, wordlist)
-        VALUES (?, ?, ?, ?, ?)
-        """,
-        (
-            eightball_id,
-            wallet_id,
-            data.name,
-            data.lnurlpayamount,
-            data.wordlist,
-        ),
+        insert_query("eightball.maintable", data),
+        (*data.dict().values(),),
     )
-    eightball = await get_eightball(eightball_id, req)
-    assert eightball, "Newly created table couldn't be retrieved"
-    return eightball
+    return data
 
 
-async def get_eightball(
-    eightball_id: str, req: Optional[Request] = None
-) -> Optional[EightBall]:
+async def get_eightball(eightball_id: str) -> Optional[EightBall]:
     row = await db.fetchone(
         "SELECT * FROM eightball.maintable WHERE id = ?", (eightball_id,)
     )
-    if not row:
-        return None
-    rowAmended = EightBall(**row)
-    if req:
-        rowAmended.lnurlpay = lnurl_encode(
-            req.url_for("eightball.api_lnurl_pay", eightball_id=row.id)._url
-        )
-    return rowAmended
+    return EightBall(**row) if row else None
 
 
-async def get_eightballs(
-    wallet_ids: Union[str, List[str]], req: Optional[Request] = None
-) -> List[EightBall]:
+async def get_eightballs(wallet_ids: Union[str, list[str]]) -> list[EightBall]:
     if isinstance(wallet_ids, str):
         wallet_ids = [wallet_ids]
 
@@ -56,25 +31,17 @@ async def get_eightballs(
     rows = await db.fetchall(
         f"SELECT * FROM eightball.maintable WHERE wallet IN ({q})", (*wallet_ids,)
     )
-    tempRows = [EightBall(**row) for row in rows]
-    if req:
-        for row in tempRows:
-            row.lnurlpay = lnurl_encode(
-                req.url_for("eightball.api_lnurl_pay", eightball_id=row.id)._url
-            )
-    return tempRows
+    return [EightBall(**row) for row in rows]
 
 
-async def update_eightball(
-    eightball_id: str, req: Optional[Request] = None, **kwargs
-) -> EightBall:
-    q = ", ".join([f"{field[0]} = ?" for field in kwargs.items()])
+async def update_eightball(eightball: EightBall) -> EightBall:
     await db.execute(
-        f"UPDATE eightball.maintable SET {q} WHERE id = ?",
-        (*kwargs.values(), eightball_id),
+        update_query("eightball.maintable", eightball),
+        (
+            *eightball.dict().values(),
+            eightball.id,
+        ),
     )
-    eightball = await get_eightball(eightball_id, req)
-    assert eightball, "Newly updated eightball couldn't be retrieved"
     return eightball
 
 

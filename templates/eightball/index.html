@@ -8,7 +8,9 @@
   <div class="col-12 col-md-8 col-lg-7 q-gutter-y-md">
     <q-card>
       <q-card-section>
-        <q-btn unelevated color="primary" @click="formDialog.show = true">New Magic 8 Ball</q-btn>
+        <q-btn unelevated color="primary" @click="formDialog.show = true"
+          >New Magic 8 Ball</q-btn
+        >
       </q-card-section>
     </q-card>
     <q-card>
@@ -21,8 +23,14 @@
             <q-btn flat color="grey" @click="exportCSV">Export to CSV</q-btn>
           </div>
         </div>
-        <q-table dense flat :data="eightb" row-key="id" :columns="myexTable.columns"
-          :pagination.sync="myexTable.pagination">
+        <q-table
+          dense
+          flat
+          :data="eightb"
+          row-key="id"
+          :columns="myexTable.columns"
+          :pagination.sync="myexTable.pagination"
+        >
           <template v-slot:header="props">
             <q-tr :props="props">
               <q-th v-for="col in props.cols" :key="col.name" :props="props">
@@ -33,26 +41,57 @@
           <template v-slot:body="props">
             <q-tr :props="props">
               <q-td v-for="col in props.cols" :key="col.name" :props="props">
-                <div v-if="col.field == 'total'">${ col.value / 1000 } sats</div>
+                <div v-if="col.field == 'total'">
+                  ${ col.value / 1000 } sats
+                </div>
                 <div v-else>${ col.value }</div>
               </q-td>
               <q-td auto-width>
-                <q-btn unelevated dense size="sm" icon="qr_code" :color="($q.dark.isActive) ? 'grey-7' : 'grey-5'"
-                  class="q-mr-sm" @click="openUrlDialog(props.row.id)"></q-btn>
+                <q-btn
+                  unelevated
+                  dense
+                  size="sm"
+                  icon="qr_code"
+                  :color="($q.dark.isActive) ? 'grey-7' : 'grey-5'"
+                  class="q-mr-sm"
+                  @click="openUrlDialog(props.row.id)"
+                ></q-btn>
               </q-td>
               <q-td auto-width>
-                <q-btn unelevated dense size="sm" icon="launch" :color="($q.dark.isActive) ? 'grey-7' : 'grey-5'"
-                  type="a" :href="props.row.eightball" target="_blank">
+                <q-btn
+                  unelevated
+                  dense
+                  size="sm"
+                  icon="launch"
+                  :color="($q.dark.isActive) ? 'grey-7' : 'grey-5'"
+                  type="a"
+                  :href="props.row.eightball"
+                  target="_blank"
+                >
                   <q-tooltip>Open public page</q-tooltip>
                 </q-btn>
               </q-td>
               <q-td>
-                <q-btn flat dense size="xs" @click="updateEightBallForm(props.row.id)" icon="edit" color="light-blue">
+                <q-btn
+                  flat
+                  dense
+                  size="xs"
+                  @click="updateEightBallForm(props.row.id)"
+                  icon="edit"
+                  color="light-blue"
+                >
                   <q-tooltip>Edit Magic 8 Ball</q-tooltip>
                 </q-btn>
               </q-td>
               <q-td>
-                <q-btn flat dense size="xs" @click="deleteEightBall(props.row.id)" icon="cancel" color="pink">
+                <q-btn
+                  flat
+                  dense
+                  size="xs"
+                  @click="deleteEightBall(props.row.id)"
+                  icon="cancel"
+                  color="pink"
+                >
                   <q-tooltip>Delete Magic 8 Ball</q-tooltip>
                 </q-btn>
               </q-td>
@@ -65,9 +104,13 @@
   <div class="col-12 col-md-4 col-lg-5 q-gutter-y-md">
     <q-card>
       <q-card-section>
-        <h6 class="text-subtitle1 q-my-none">{{ SITE_TITLE }} Magic 8 Ball extension</h6>
-        <p>Pay sats and return a random word from a list.<br />Use for Magic 8 Ball and selling things like Satoshi
-          quotes.</p>
+        <h6 class="text-subtitle1 q-my-none">
+          {{ SITE_TITLE }} Magic 8 Ball extension
+        </h6>
+        <p>
+          Pay sats and return a random word from a list.<br />Use for Magic 8
+          Ball and selling things like Satoshi quotes.
+        </p>
       </q-card-section>
       <q-card-section class="q-pa-none">
         <q-separator></q-separator>
@@ -84,19 +127,51 @@
 <q-dialog v-model="formDialog.show" position="top" @hide="closeFormDialog">
   <q-card class="q-pa-lg q-pt-xl" style="width: 500px">
     <q-form @submit="sendEightBallData" class="q-gutter-md">
-      <q-input filled dense v-model.trim="formDialog.data.name" label="Name"
-        placeholder="Name for your record"></q-input>
-      <q-select filled dense emit-value v-model="formDialog.data.wallet" :options="g.user.walletOptions"
-        label="Wallet *"></q-select>
-      <q-input filled dense type="number" v-model.trim="formDialog.data.lnurlpayamount"
-        label="LNURL-pay amount"></q-input>
-      <q-input filled dense type="textarea" v-model.trim="formDialog.data.wordlist"
-        label="LNURL-withdraw amount"></q-input>
+      <q-input
+        filled
+        dense
+        v-model.trim="formDialog.data.name"
+        label="Name"
+        placeholder="Name for your record"
+      ></q-input>
+      <q-select
+        filled
+        dense
+        emit-value
+        v-model="formDialog.data.wallet"
+        :options="g.user.walletOptions"
+        label="Wallet *"
+      ></q-select>
+      <q-input
+        filled
+        dense
+        type="number"
+        v-model.trim="formDialog.data.lnurlpayamount"
+        label="LNURL-pay amount"
+      ></q-input>
+      <q-input
+        filled
+        dense
+        type="textarea"
+        v-model.trim="formDialog.data.wordlist"
+        label="LNURL-withdraw amount"
+      ></q-input>
       <div class="row q-mt-lg">
-        <q-btn v-if="formDialog.data.id" unelevated color="primary" type="submit">Update Magic 8 Ball</q-btn>
-        <q-btn v-else unelevated color="primary"
+        <q-btn
+          v-if="formDialog.data.id"
+          unelevated
+          color="primary"
+          type="submit"
+          >Update Magic 8 Ball</q-btn
+        >
+        <q-btn
+          v-else
+          unelevated
+          color="primary"
           :disable="formDialog.data.name == null || formDialog.data.wallet == null || formDialog.data.wordlist == null || formDialog.data.lnurlpayamount == null"
-          type="submit">Create Magic 8 Ball</q-btn>
+          type="submit"
+          >Create Magic 8 Ball</q-btn
+        >
         <q-btn v-close-popup flat color="grey" class="q-ml-auto">Cancel</q-btn>
       </div>
     </q-form>
@@ -120,7 +195,10 @@
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
 <script>
   const mapEightBall = obj => {
-    obj.date = Quasar.utils.date.formatDate(new Date(obj.time * 1000), 'YYYY-MM-DD HH:mm')
+    obj.date = Quasar.utils.date.formatDate(
+      new Date(obj.time * 1000),
+      'YYYY-MM-DD HH:mm'
+    )
     obj.eightball = `/eightball/${obj.id}`
     return obj
   }
@@ -135,16 +213,17 @@
         eightb: [],
         myexTable: {
           columns: [
-            { name: 'id', align: 'left', label: 'ID', field: 'id' },
-            { name: 'name', align: 'left', label: 'Name', field: 'name' },
-            { name: 'wallet', align: 'left', label: 'Wallet', field: 'wallet' },
+            {name: 'id', align: 'left', label: 'ID', field: 'id'},
+            {name: 'name', align: 'left', label: 'Name', field: 'name'},
+            {name: 'wallet', align: 'left', label: 'Wallet', field: 'wallet'}
           ],
-          pagination: { rowsPerPage: 10 }
+          pagination: {rowsPerPage: 10}
         },
         formDialog: {
           show: false,
           data: {
-            wordlist: "yes\nno\nmaybe\nask again later\nbetter not tell you now\ncannot predict now\nconcentrate and ask again\nmy reply is no\nmy sources say no\noutlook not so good\nvery doubtful",
+            wordlist:
+              'yes\nno\nmaybe\nask again later\nbetter not tell you now\ncannot predict now\nconcentrate and ask again\nmy reply is no\nmy sources say no\noutlook not so good\nvery doubtful'
           },
           advanced: {}
         },
@@ -160,7 +239,12 @@
         this.formDialog.data = {}
       },
       getEightBalls() {
-        LNbits.api.request('GET', '/eightball/api/v1/eightb?all_wallets=true', this.g.user.wallets[0].inkey)
+        LNbits.api
+          .request(
+            'GET',
+            '/eightball/api/v1/eightb?all_wallets=true',
+            this.g.user.wallets[0].inkey
+          )
           .then(response => {
             this.eightb = response.data.map(mapEightBall)
           })
@@ -171,7 +255,9 @@
           wordlist: this.formDialog.data.wordlist,
           lnurlpayamount: this.formDialog.data.lnurlpayamount
         }
-        const wallet = _.findWhere(this.g.user.wallets, { id: this.formDialog.data.wallet })
+        const wallet = _.findWhere(this.g.user.wallets, {
+          id: this.formDialog.data.wallet
+        })
         if (this.formDialog.data.id) {
           data.id = this.formDialog.data.id
           data.wallet = wallet.id
@@ -182,12 +268,13 @@
         }
       },
       updateEightBallForm(tempId) {
-        const eightball = _.findWhere(this.eightb, { id: tempId })
-        this.formDialog.data = { ...eightball }
+        const eightball = _.findWhere(this.eightb, {id: tempId})
+        this.formDialog.data = {...eightball}
         this.formDialog.show = true
       },
       createEightBall(wallet, data) {
-        LNbits.api.request('POST', '/eightball/api/v1/eightb', wallet.adminkey, data)
+        LNbits.api
+          .request('POST', '/eightball/api/v1/eightb', wallet.adminkey, data)
           .then(response => {
             this.eightb.push(mapEightBall(response.data))
             this.closeFormDialog()
@@ -195,7 +282,13 @@
           .catch(LNbits.utils.notifyApiError)
       },
       updateEightBall(wallet, data) {
-        LNbits.api.request('PUT', `/eightball/api/v1/eightb/${data.id}`, wallet.adminkey, data)
+        LNbits.api
+          .request(
+            'PUT',
+            `/eightball/api/v1/eightb/${data.id}`,
+            wallet.adminkey,
+            data
+          )
           .then(response => {
             this.eightb = this.eightb.filter(obj => obj.id !== data.id)
             this.eightb.push(mapEightBall(response.data))
@@ -204,9 +297,17 @@
           .catch(LNbits.utils.notifyApiError)
       },
       deleteEightBall(tempId) {
-        LNbits.utils.confirmDialog('Are you sure you want to delete this EightBall?')
+        LNbits.utils
+          .confirmDialog('Are you sure you want to delete this EightBall?')
           .onOk(() => {
-            LNbits.api.request('DELETE', `/eightball/api/v1/eightb/${tempId}`, _.findWhere(this.g.user.wallets, { id: _.findWhere(this.eightb, { id: tempId }).wallet }).adminkey)
+            LNbits.api
+              .request(
+                'DELETE',
+                `/eightball/api/v1/eightb/${tempId}`,
+                _.findWhere(this.g.user.wallets, {
+                  id: _.findWhere(this.eightb, {id: tempId}).wallet
+                }).adminkey
+              )
               .then(() => {
                 this.eightb = this.eightb.filter(obj => obj.id !== tempId)
               })
@@ -217,15 +318,15 @@
         LNbits.utils.exportCSV(this.myexTable.columns, this.eightb)
       },
       itemsArray(tempId) {
-        const eightball = _.findWhere(this.eightb, { id: tempId })
+        const eightball = _.findWhere(this.eightb, {id: tempId})
         return [...eightball.itemsMap.values()]
       },
       openformDialog(id) {
         const [tempId, itemId] = id.split(':')
-        const eightball = _.findWhere(this.eightb, { id: tempId })
+        const eightball = _.findWhere(this.eightb, {id: tempId})
         if (itemId) {
           const item = eightball.itemsMap.get(id)
-          this.formDialog.data = { ...item, eightball: tempId }
+          this.formDialog.data = {...item, eightball: tempId}
         } else {
           this.formDialog.data.eightball = tempId
         }
@@ -237,13 +338,13 @@
         this.formDialog.data = {}
       },
       openUrlDialog(id) {
-        this.urlDialog.data = _.findWhere(this.eightb, { id })
+        this.urlDialog.data = _.findWhere(this.eightb, {id})
         this.qrValue = this.urlDialog.data.lnurlpay
         this.connectWebocket(this.urlDialog.data.id)
         this.urlDialog.show = true
       },
       createInvoice(walletId, eightballId) {
-        const wallet = _.findWhere(this.g.user.wallets, { id: walletId })
+        const wallet = _.findWhere(this.g.user.wallets, {id: walletId})
         const dataToSend = {
           out: false,
           amount: this.invoiceAmount,
@@ -253,22 +354,23 @@
             eightballId
           }
         }
-        LNbits.api.request('POST', `/api/v1/payments`, wallet.inkey, dataToSend)
+        LNbits.api
+          .request('POST', `/api/v1/payments`, wallet.inkey, dataToSend)
           .then(response => {
             this.qrValue = response.data.payment_request
           })
           .catch(LNbits.utils.notifyApiError)
       },
       makeItRain() {
-        document.getElementById("vue").disabled = true
-        const end = Date.now() + (2 * 1000)
+        document.getElementById('vue').disabled = true
+        const end = Date.now() + 2 * 1000
         const colors = ['#FFD700', '#ffffff']
         const frame = () => {
           confetti({
             particleCount: 2,
             angle: 60,
             spread: 55,
-            origin: { x: 0 },
+            origin: {x: 0},
             colors,
             zIndex: 999999
           })
@@ -276,14 +378,14 @@
             particleCount: 2,
             angle: 120,
             spread: 55,
-            origin: { x: 1 },
+            origin: {x: 1},
             colors,
             zIndex: 999999
           })
           if (Date.now() < end) {
             requestAnimationFrame(frame)
           } else {
-            document.getElementById("vue").disabled = false
+            document.getElementById('vue').disabled = false
           }
         }
         frame()
