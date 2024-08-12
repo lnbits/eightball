@@ -50,7 +50,7 @@ async def api_lnurl_pay_cb(
     if not eightball:
         return {"status": "ERROR", "reason": "No eightball found"}
 
-    payment_request = await create_invoice(
+    _, payment_request = await create_invoice(
         wallet_id=eightball.wallet,
         amount=int(amount / 1000),
         memo=eightball.name,
