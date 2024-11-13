@@ -26,10 +26,10 @@
         <q-table
           dense
           flat
-          :data="eightb"
+          :rows="eightb"
           row-key="id"
           :columns="myexTable.columns"
-          :pagination.sync="myexTable.pagination"
+          v-model:pagination="myexTable.pagination"
         >
           <template v-slot:header="props">
             <q-tr :props="props">
@@ -360,35 +360,6 @@
             this.qrValue = response.data.payment_request
           })
           .catch(LNbits.utils.notifyApiError)
-      },
-      makeItRain() {
-        document.getElementById('vue').disabled = true
-        const end = Date.now() + 2 * 1000
-        const colors = ['#FFD700', '#ffffff']
-        const frame = () => {
-          confetti({
-            particleCount: 2,
-            angle: 60,
-            spread: 55,
-            origin: {x: 0},
-            colors,
-            zIndex: 999999
-          })
-          confetti({
-            particleCount: 2,
-            angle: 120,
-            spread: 55,
-            origin: {x: 1},
-            colors,
-            zIndex: 999999
-          })
-          if (Date.now() < end) {
-            requestAnimationFrame(frame)
-          } else {
-            document.getElementById('vue').disabled = false
-          }
-        }
-        frame()
       },
       connectWebocket(wallet_id) {
         let localUrl

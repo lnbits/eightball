@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, Depends, HTTPException, Query
 from lnbits.core.crud import get_user
 from lnbits.core.models import WalletTypeInfo
 from lnbits.decorators import (
@@ -8,7 +8,6 @@ from lnbits.decorators import (
     require_invoice_key,
 )
 from lnbits.helpers import urlsafe_short_hash
-from lnurl import encode as lnurl_encode
 
 from .crud import (
     create_eightball,
@@ -56,7 +55,7 @@ async def api_eightball_update(
 ):
     if not eightball_id:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail="EightBall does not exist."
+            status_code=HTTPStatus.NOT_FOUND, detail="EightBall has no ID."
         )
     eightball = await get_eightball(eightball_id)
     assert eightball, "EightBall couldn't be retrieved"
@@ -76,20 +75,13 @@ async def api_eightball_update(
     status_code=HTTPStatus.CREATED,
 )
 async def api_eightball_create(
-    request: Request,
     data: CreateEightBallData,
     wallet: WalletTypeInfo = Depends(require_admin_key),
 ) -> EightBall:
     if not data.wallet:
         data.wallet = wallet.wallet.id
-
-    ball_id = urlsafe_short_hash()
-    lnurl = lnurl_encode(
-        str(request.url_for("eightball.api_lnurl_pay", eightball_id=ball_id))
-    )
     eightball = EightBall(
-        id=ball_id,
-        lnurlpay=lnurl,
+        id=urlsafe_short_hash(),
         **data.dict(),
     )
     return await create_eightball(eightball)

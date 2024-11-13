@@ -1,6 +1,7 @@
 import asyncio
 
 from fastapi import APIRouter
+from lnbits.tasks import create_permanent_unique_task
 from loguru import logger
 
 from .crud import db
@@ -33,16 +34,8 @@ def eightball_stop():
 
 
 def eightball_start():
-    from lnbits.tasks import create_permanent_unique_task
-
     task = create_permanent_unique_task("ext_eightball", wait_for_paid_invoices)
     scheduled_tasks.append(task)
 
 
-__all__ = [
-    "db",
-    "eightball_ext",
-    "eightball_static_files",
-    "eightball_start",
-    "eightball_stop",
-]
+__all__ = ["db", "eightball_ext", "eightball_static_files"]
