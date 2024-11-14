@@ -1,4 +1,4 @@
-Madbitcoin's Magic Eightball
+MadBitcoin's Magic Eightball
 
 Based on the predictor of predictors in Thhhheeeee Bitcoin group https://www.youtube.com/c/Worldcryptonetwork
 

@@ -1,4 +1,4 @@
-# Madbitcoin's Magic Eightball
+# MadBitcoin's Magic Eightball
 
 ## Use for Magic 8 Ball and selling things like Satoshi quotes.
 
