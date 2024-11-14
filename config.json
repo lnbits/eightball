@@ -1,7 +1,7 @@
 {
-  "name": "Magic 8 Ball",
-  "short_description": "Magic 8 Ball Extension",
-  "tile": "/eightball/static/image/eightball.png",
+  "name": "Mad eightball",
+  "short_description": "Madbitcoin's Magic Eightball",
+  "tile": "/eightball/static/image/eightball.gif",
   "min_lnbits_version": "0.12.5",
   "contributors": [
     {

@@ -8,9 +8,8 @@ db = Database("ext_eightball")
 
 
 async def create_eightball(data: EightBall) -> EightBall:
-    eightball = await db.insert("eightball.maintable", data)
-    assert eightball, "Newly created eightball couldn't be retrieved"
-    return eightball
+    await db.insert("eightball.maintable", data)
+    return data
 
 
 async def get_eightball(eightball_id: str) -> Optional[EightBall]:

@@ -10,11 +10,11 @@
         <div class="text-center">
           <a class="text-secondary" href="lightning:{{ lnurl }}">
             <q-responsive :ratio="1" class="q-mx-md">
-              <qrcode
+              <lnbits-qrcode
                 :value="qrValue"
                 :options="{width: 800}"
                 class="rounded-borders"
-              ></qrcode>
+              ></lnbits-qrcode>
             </q-responsive>
           </a>
         </div>
@@ -29,11 +29,12 @@
   <div class="col-12 col-sm-6 col-md-5 col-lg-4 q-gutter-y-md">
     <q-card>
       <q-card-section>
-        <h6 class="text-subtitle1 q-mb-sm q-mt-none">
-          {% raw %} {{eightBallname}} {% endraw %}
-        </h6>
-        <p class="q-my-none">Pay sats and get words back</p></q-card-section
-      >
+        <h6
+          class="text-subtitle1 q-mb-sm q-mt-none"
+          v-text="eightBallname"
+        ></h6>
+        <p class="q-my-none" v-text="eightBalldescription"></p
+      ></q-card-section>
       <q-card-section class="q-pa-none">
         <q-separator></q-separator>
         <q-list> </q-list>
@@ -43,16 +44,15 @@
 </div>
 {% endblock %} {% block scripts %}
 <script>
-  Vue.component(VueQrcode.name, VueQrcode)
-
-  new Vue({
+  window.app = Vue.createApp({
     el: '#vue',
     mixins: [windowMixin],
     data: function () {
       return {
         qrValue: '{{lnurlpay}}',
         eightBallID: '{{eightball_id}}',
-        eightBallname: '{{eightball_name}}'
+        eightBallname: '{{eightball_name}}',
+        eightBalldescription: '{{eightball_description}}'
       }
     }
   })

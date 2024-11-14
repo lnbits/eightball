@@ -65,7 +65,7 @@
                   icon="launch"
                   :color="($q.dark.isActive) ? 'grey-7' : 'grey-5'"
                   type="a"
-                  :href="props.row.eightball"
+                  :href="props.row.id"
                   target="_blank"
                 >
                   <q-tooltip>Open public page</q-tooltip>
@@ -132,7 +132,14 @@
         dense
         v-model.trim="formDialog.data.name"
         label="Name"
-        placeholder="Name for your record"
+        placeholder="Name for your eightball"
+      ></q-input>
+      <q-input
+        filled
+        dense
+        v-model.trim="formDialog.data.description"
+        label="Description"
+        placeholder="Description for your eightball"
       ></q-input>
       <q-select
         filled
@@ -202,7 +209,7 @@
     obj.eightball = `/eightball/${obj.id}`
     return obj
   }
-  new Vue({
+  window.app = Vue.createApp({
     el: '#vue',
     mixins: [windowMixin],
     delimiters: ['${', '}'],
@@ -215,6 +222,12 @@
           columns: [
             {name: 'id', align: 'left', label: 'ID', field: 'id'},
             {name: 'name', align: 'left', label: 'Name', field: 'name'},
+            {
+              name: 'description',
+              align: 'left',
+              label: 'Description',
+              field: 'description'
+            },
             {name: 'wallet', align: 'left', label: 'Wallet', field: 'wallet'}
           ],
           pagination: {rowsPerPage: 10}
@@ -222,6 +235,9 @@
         formDialog: {
           show: false,
           data: {
+            description: "Maaaaaadddddbitcoin's magic eightball",
+            description:
+              'Abiding by entropy is embracing fate. Ask a question out loud, pay sats and get an answer!',
             wordlist:
               'yes\nno\nmaybe\nask again later\nbetter not tell you now\ncannot predict now\nconcentrate and ask again\nmy reply is no\nmy sources say no\noutlook not so good\nvery doubtful'
           },
@@ -246,12 +262,13 @@
             this.g.user.wallets[0].inkey
           )
           .then(response => {
-            this.eightb = response.data.map(mapEightBall)
+            this.eightb = response.data
           })
       },
       sendEightBallData() {
         const data = {
           name: this.formDialog.data.name,
+          description: this.formDialog.data.description,
           wordlist: this.formDialog.data.wordlist,
           lnurlpayamount: this.formDialog.data.lnurlpayamount
         }
@@ -276,7 +293,7 @@
         LNbits.api
           .request('POST', '/eightball/api/v1/eightb', wallet.adminkey, data)
           .then(response => {
-            this.eightb.push(mapEightBall(response.data))
+            this.eightb.push(response.data)
             this.closeFormDialog()
           })
           .catch(LNbits.utils.notifyApiError)
@@ -291,7 +308,7 @@
           )
           .then(response => {
             this.eightb = this.eightb.filter(obj => obj.id !== data.id)
-            this.eightb.push(mapEightBall(response.data))
+            this.eightb.push(response.data)
             this.closeFormDialog()
           })
           .catch(LNbits.utils.notifyApiError)

@@ -30,7 +30,8 @@ async def api_eightballs(
     if all_wallets:
         user = await get_user(wallet.wallet.user)
         wallet_ids = user.wallet_ids if user else []
-    return await get_eightballs(wallet_ids)
+    eightballs = await get_eightballs(wallet_ids)
+    return eightballs
 
 
 @eightball_api_router.get(

@@ -20,7 +20,7 @@ def eightball_renderer():
 @eightball_generic_router.get("/", response_class=HTMLResponse)
 async def index(request: Request, user: User = Depends(check_user_exists)):
     return eightball_renderer().TemplateResponse(
-        "eightball/index.html", {"request": request, "user": user.dict()}
+        "eightball/index.html", {"request": request, "user": user.json()}
     )
 
 
@@ -37,7 +37,8 @@ async def eightball(request: Request, eightball_id):
             "request": request,
             "eightball_id": eightball_id,
             "eightball_name": eightball.name,
-            "lnurlpay": eightball.lnurlpay,
+            "eightball_description": eightball.description,
+            "lnurlpay": eightball.lnurlpay(request),
             "web_manifest": f"/eightball/manifest/{eightball_id}.webmanifest",
         },
     )
