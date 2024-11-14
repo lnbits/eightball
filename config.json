@@ -1,7 +1,7 @@
 {
   "name": "Mad eightball",
   "short_description": "Madbitcoin's Magic Eightball",
-  "tile": "/eightball/static/image/eightball.gif",
+  "tile": "/eightball/static/image/eightball.png",
   "min_lnbits_version": "0.12.5",
   "contributors": [
     {
