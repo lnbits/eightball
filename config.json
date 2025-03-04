@@ -1,5 +1,6 @@
 {
   "name": "Magic 8ball",
+  "version": "1.0.0",
   "short_description": "MadBitcoin's Magic Eightball",
   "tile": "/eightball/static/image/eightball.png",
   "min_lnbits_version": "1.0.0",
