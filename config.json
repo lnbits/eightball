@@ -1,9 +1,9 @@
 {
   "name": "Magic 8ball",
-  "version": "1.0.0",
   "short_description": "MadBitcoin's Magic Eightball",
   "tile": "/eightball/static/image/eightball.png",
-  "min_lnbits_version": "1.0.0",
+  "version": "1.1.0",
+  "min_lnbits_version": "1.3.0",
   "contributors": [
     {
       "name": "Ben Arc",
