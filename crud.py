@@ -1,5 +1,3 @@
-from typing import List, Optional, Union
-
 from lnbits.db import Database
 
 from .models import EightBall
@@ -12,7 +10,7 @@ async def create_eightball(data: EightBall) -> EightBall:
     return data
 
 
-async def get_eightball(eightball_id: str) -> Optional[EightBall]:
+async def get_eightball(eightball_id: str) -> EightBall | None:
     return await db.fetchone(
         "SELECT * FROM eightball.maintable WHERE id = :id",
         {"id": eightball_id},
@@ -20,7 +18,7 @@ async def get_eightball(eightball_id: str) -> Optional[EightBall]:
     )
 
 
-async def get_eightballs(wallet_ids: Union[str, List[str]]) -> List[EightBall]:
+async def get_eightballs(wallet_ids: str | list[str]) -> list[EightBall]:
     if isinstance(wallet_ids, str):
         wallet_ids = [wallet_ids]
     q = ",".join([f"'{w}'" for w in wallet_ids])

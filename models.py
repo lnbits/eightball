@@ -1,5 +1,3 @@
-from typing import Optional
-
 from fastapi import Request
 from lnurl.core import encode as lnurl_encode
 from loguru import logger
@@ -8,17 +6,17 @@ from pydantic import BaseModel
 
 class CreateEightBallData(BaseModel):
     name: str
-    description: Optional[str] = ""
+    description: str | None = ""
     wordlist: str
     lnurlpayamount: int
-    wallet: Optional[str] = None
+    wallet: str | None = None
 
 
 class EightBall(BaseModel):
     id: str
     wallet: str
     name: str
-    description: Optional[str] = ""
+    description: str | None = ""
     wordlist: str
     lnurlpayamount: int
 
