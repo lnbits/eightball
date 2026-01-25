@@ -1,12 +1,10 @@
-MadBitcoin's Magic Eightball
+Create payment QR codes that reveal a random word or phrase from a customizable list.
 
-Based on the predictor of predictors in Thhhheeeee Bitcoin group https://www.youtube.com/c/Worldcryptonetwork
+Its functions include:
 
-Make payment QR codes that people can pay some sats to an receive a random word from a list.
+- Setting up Magic 8 Ball style fortune tellers
+- Creating paid Satoshi quote dispensers
+- Configuring custom word lists and responses
+- Generating shareable payment QR codes
 
-Example use cases:
-
-- Magic 8 Ball
-- Pay for satoshi quotes
-
-As seen in the "1hr extension build tutorial" https://www.youtube.com/watch?v=zHXLvvjClHI
+A playful and engaging way for creators to offer paid fortune-telling, random quotes, or surprise messages to their audience.
