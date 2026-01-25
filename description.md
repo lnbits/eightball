@@ -8,3 +8,5 @@ Its functions include:
 - Generating shareable payment QR codes
 
 A playful and engaging way for creators to offer paid fortune-telling, random quotes, or surprise messages to their audience.
+
+As seen in the "1hr extension build tutorial" https://www.youtube.com/watch?v=zHXLvvjClHI
