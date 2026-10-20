@@ -20,7 +20,7 @@ def eightball_renderer():
 @eightball_generic_router.get("/", response_class=HTMLResponse)
 async def index(request: Request, user: User = Depends(check_user_exists)):
     return eightball_renderer().TemplateResponse(
-        "eightball/index.html", {"request": request, "user": user.json()}
+        "eightball/index.html", {"request": request, "user": user.model_dump_json()}
     )
 
 
