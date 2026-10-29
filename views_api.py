@@ -65,7 +65,7 @@ async def api_eightball_update(
         raise HTTPException(
             status_code=HTTPStatus.FORBIDDEN, detail="Not your EightBall."
         )
-    for key, ball in data.dict().items():
+    for key, ball in data.model_dump().items():
         setattr(eightball, key, ball)
     eightball = await update_eightball(eightball)
     return eightball
@@ -83,7 +83,7 @@ async def api_eightball_create(
         data.wallet = wallet.wallet.id
     eightball = EightBall(
         id=urlsafe_short_hash(),
-        **data.dict(),
+        **data.model_dump(),
     )
     return await create_eightball(eightball)
 

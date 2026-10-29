@@ -11,11 +11,10 @@ from lnurl import (
     LnurlPayActionResponse,
     LnurlPayMetadata,
     LnurlPayResponse,
-    Max144Str,
     MessageAction,
     MilliSatoshi,
 )
-from pydantic import parse_obj_as
+from pydantic import TypeAdapter
 
 from .crud import get_eightball
 
@@ -40,7 +39,7 @@ async def api_lnurl_pay(
         request.url_for("eightball.api_lnurl_pay_callback", eightball_id=eightball_id)
     )
     return LnurlPayResponse(
-        callback=parse_obj_as(CallbackUrl, callback_url),
+        callback=TypeAdapter(CallbackUrl).validate_python(callback_url),
         minSendable=MilliSatoshi(eightball.lnurlpayamount * 1000),
         maxSendable=MilliSatoshi(eightball.lnurlpayamount * 1000),
         metadata=LnurlPayMetadata(json.dumps([["text/plain", eightball.name]])),
@@ -72,6 +71,6 @@ async def api_lnurl_pay_cb(
             "word": random_word,
         },
     )
-    invoice = parse_obj_as(LightningInvoice, payment.bolt11)
-    action = MessageAction(message=Max144Str(random_word))
+    invoice = TypeAdapter(LightningInvoice).validate_python(payment.bolt11)
+    action = MessageAction(message=random_word)
     return LnurlPayActionResponse(pr=invoice, successAction=action)
