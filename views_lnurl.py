@@ -25,6 +25,7 @@ eightball_lnurl_router = APIRouter()
     "/api/v1/lnurl/pay/{eightball_id}",
     status_code=HTTPStatus.OK,
     name="eightball.api_lnurl_pay",
+    openapi_extra={"x-lnbits-local-lnurl": True},
 )
 async def api_lnurl_pay(
     request: Request,
@@ -49,6 +50,7 @@ async def api_lnurl_pay(
 @eightball_lnurl_router.get(
     "/api/v1/lnurl/paycb/{eightball_id}",
     name="eightball.api_lnurl_pay_callback",
+    openapi_extra={"x-lnbits-local-lnurl": True},
 )
 async def api_lnurl_pay_cb(
     request: Request,
